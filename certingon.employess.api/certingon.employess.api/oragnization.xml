@@ -1,0 +1,13 @@
+﻿<Organization xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" RegistrationNumber="01">
+	<Name>Office1</Name>
+	<Offices>
+		<Organization RegistrationNumber="02">
+			<Name>Office2</Name>
+			<Country>USA</Country>
+			<Address>Office2Address</Address>
+		</Organization>
+	</Offices>
+	<Country>BIH</Country>
+	<Address>Address</Address>
+</Organization>
