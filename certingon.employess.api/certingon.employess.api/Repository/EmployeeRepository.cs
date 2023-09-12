@@ -1,18 +1,22 @@
 ﻿using certingon.employess.api.Model;
+using Newtonsoft.Json;
 
 namespace certingon.employess.api.Services
 {
     public class EmployeeRepository : IEmployeeRepository
     {
-        private List<Employee> employees = new List<Employee>
+
+        private readonly string jsonFilePath = "employee.json";
+        private List<Employee> employees;
+
+        public EmployeeRepository()
         {
-            new Employee { Id = 1, Name = "John", Surname = "Doe", City = "New York", Department = Department.Management, IsActive = false },
-            new Employee { Id = 2, Name = "Jane", Surname = "Smith", City = "Los Angeles", Department = Department.HR, IsActive = true}
-        };
+            employees = LoadEmployeesFromFile();
+        }
 
         public IEnumerable<Employee> GetAllEmployees()
         {
-            return employees;
+            return employees.ToList();
         }
 
         public Employee GetEmployeeById(int id)
@@ -24,6 +28,7 @@ namespace certingon.employess.api.Services
         {
             employee.Id = employees.Max(e => e.Id) + 1;
             employees.Add(employee);
+            SaveEmployeesToFile(employees);
         }
 
         public void UpdateEmployee(Employee updatedEmployee)
@@ -36,6 +41,7 @@ namespace certingon.employess.api.Services
                 existingEmployee.City = updatedEmployee.City;
                 existingEmployee.Department = updatedEmployee.Department;
                 existingEmployee.IsActive = updatedEmployee.IsActive;
+                SaveEmployeesToFile(employees);
             }
         }
 
@@ -45,12 +51,33 @@ namespace certingon.employess.api.Services
             if (employeeToDelete != null)
             {
                 employees.Remove(employeeToDelete);
+                SaveEmployeesToFile(employees);
             }
         }
 
-        public Employee GetEmployeeByStatus(bool isActive = true)
+        public IEnumerable<Employee> GetEmployeeByStatus(bool isActive = true)
         {
-            return employees.FirstOrDefault(e => e.IsActive == isActive);
+            return employees.Where(e => e.IsActive == isActive).ToList();
+        }
+
+
+        private List<Employee> LoadEmployeesFromFile()
+        {
+            if (File.Exists(jsonFilePath))
+            {
+                var jsonData = File.ReadAllText(jsonFilePath);
+                return JsonConvert.DeserializeObject<List<Employee>>(jsonData);
+            }
+            else
+            {
+                return new List<Employee>();
+            }
+        }
+
+        private void SaveEmployeesToFile(List<Employee> employees)
+        {
+            var jsonData = JsonConvert.SerializeObject(employees, Formatting.Indented);
+            File.WriteAllText(jsonFilePath, jsonData);
         }
     }
 }

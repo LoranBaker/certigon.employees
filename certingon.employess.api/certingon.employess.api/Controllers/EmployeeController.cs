@@ -23,6 +23,7 @@ namespace certingon.employess.api.Controllers
             var employees = _repository.GetAllEmployees().ToList();
             if (employees.Any())
             {
+
                 return Ok(employees);
             }
             else
