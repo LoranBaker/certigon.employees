@@ -4,7 +4,6 @@ import { Employee } from '../models/employee';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment';
 
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Injectable({
     providedIn: 'root'
@@ -17,11 +16,10 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
     constructor(private http: HttpClient) { }
 
 
-    public getEmployee() : Observable<Employee[]>{
-  
-        return this.http.get<Employee[]>(`${environment.api}/${this.employee}`);
-    
+    public getEmployee(): Observable<Employee[]> {
+      return this.http.get<Employee[]>(`${environment.api}/${this.employee}`);
     }
+    
 
     public createEmployee(employee: Employee) : Observable<Employee[]>{
   

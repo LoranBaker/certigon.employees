@@ -1,9 +1,9 @@
 import { Component, OnInit, Input,Output, EventEmitter } from '@angular/core';
 import { Employee } from 'src/app/models/employee';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+// import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmployeeService } from 'src/app/services/employee.service';
-import { ToastrService } from 'ngx-toastr';
+// import { ToastrService } from 'ngx-toastr';
 
 
 
@@ -18,7 +18,7 @@ export class AddEmployeeComponent implements OnInit {
 
   addFamilies!: FormGroup;
   employeeAdd: Employee = new Employee();
-  constructor(public modal: NgbActiveModal, private employeeService: EmployeeService, private toastr:ToastrService) { }
+  constructor(private employeeService: EmployeeService) { }
 
   ngOnInit(): void {
   }
