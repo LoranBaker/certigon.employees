@@ -20,6 +20,28 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
     public getEmployee() : Observable<Employee[]>{
   
         return this.http.get<Employee[]>(`${environment.api}/${this.employee}`);
+    
+    }
 
-      }
+    public createEmployee(employee: Employee) : Observable<Employee[]>{
+  
+      return this.http.post<Employee[]>(
+        `${environment.api}/${this.employee}`,
+        employee
+        );
+    }
+
+    public updateEmployee(employee: Employee) : Observable<Employee[]>{
+  
+      return this.http.put<Employee[]>(
+        `${environment.api}/${this.employee}`,
+        employee
+        );
+    }
+
+    public deleteEmployee(employee: Employee) : Observable<Employee[]>{
+
+      return this.http.delete<Employee[]>(`${environment.api}/${this.employee}/${employee.id}`);
+    }
+  
   }
