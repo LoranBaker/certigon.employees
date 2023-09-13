@@ -18,6 +18,10 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenAnyIP(7279, configure => configure.UseHttps()); // to listen for incoming https connection on port 7279
 });
 
+builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
 
 var app = builder.Build();
 
@@ -29,7 +33,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseCors("corsapp");
 app.UseAuthorization();
 
 app.MapControllers();
