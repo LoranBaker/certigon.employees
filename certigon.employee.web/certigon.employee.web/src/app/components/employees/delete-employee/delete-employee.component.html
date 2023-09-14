@@ -1,0 +1,18 @@
+<div *ngIf="employee">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Delete Employee</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+         <p>Are you sure you want to delete the {{employee.name}} employee?</p>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" (click)="deleteFamilies(employee)" *ngIf="employee.id">Delete</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancle</button>
+      </div>
+    
+</div>

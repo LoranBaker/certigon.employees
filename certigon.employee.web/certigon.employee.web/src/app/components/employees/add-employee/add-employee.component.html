@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add Employee</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addEmployee">
+        <div>
+            <div class="form-group">
+                Name:
+                <input class="form-control" formControlName="name"/>
+                <span *ngIf="f['name'].getError('required')!=null" class="error-message" style="color: red;">Please enter the name: </span>
+                <span *ngIf="f['name'].getError('minlength')!=null" class="error-message" style="color: red;">Name should have at least 3 character! </span>
+            </div>
+            <div class="form-group">
+                Surname:
+                <input class="form-control" formControlName="surname"/>
+                <span *ngIf="f['surname'].getError('required')!=null" class="error-message" style="color: red;">Please enter the surname:</span>
+                <span *ngIf="f['surname'].getError('minlength')!=null" class="error-message" style="color: red;">Surname should be at least 3 character! </span>
+            </div>
+            <div class="form-group">
+                City:
+                <input class="form-control" formControlName="city"/>
+                <span *ngIf="f['city'].getError('required')!=null" class="error-message" style="color: red;">Please enter the city name:</span>
+            </div>
+            <div class="form-group">
+                Department:
+                <select class="form-control" formControlName="department">
+                  <option *ngFor="let department of departmentOptions" [value]="department">{{ department }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                Is Active:
+                <div class="form-check form-switch">
+                  <input type="checkbox" class="form-check-input" formControlName="isActive">
+                  <label class="form-check-label" for="isActive"></label>
+                </div>
+              </div>
+              
+            <br/>
+            <div class="modal-footer">
+                <button class="btn btn-primary" [disabled]="addEmployee.invalid" (click)="createEmployee()" style="background-color:#0F3141;
+                border:solid 1px #1F1F1E;" type="submit">Create</button>
+                <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+              </div>
+            </div>
+    </form>
+  </div>
+

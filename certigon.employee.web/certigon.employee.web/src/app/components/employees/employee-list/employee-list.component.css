@@ -1,0 +1,38 @@
+.center {
+    margin-top: 40px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header .form-check {
+    margin-right: 20px;
+}
+
+.center .table {
+    background-color: #B9B09F;
+    border: solid 1px #1F1F1E;
+}
+
+.center .table thead tr {
+    color: #0F3141;
+}
+
+.center .table tr td {
+    background-color: #ECE5D3;
+}
+
+#addButton {
+    color:#1F1F1E;
+    background-color:#ECE5D3;
+    border:solid 1px #1F1F1E;
+}
+
+#editButton {
+    background-color: #0F3141;
+    border: solid 1px #1F1F1E;
+}
