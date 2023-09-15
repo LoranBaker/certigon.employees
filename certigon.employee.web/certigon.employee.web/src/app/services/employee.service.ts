@@ -29,18 +29,30 @@ export class EmployeeService {
     const employeeId = employee.id; 
     
     return this.http.put<Employee[]>(
-      `${this.api}/employees/${employeeId}`,
+      `${this.api}/${this.employee}/${employeeId}`,
       employee
     );
   }
   
-
   public deleteEmployee(employee: Employee): Observable<Employee[]> {
     return this.http.delete<Employee[]>(`${this.api}/${this.employee}/${employee.id}`);
   }
 
   public getEmployeesByStatus(isActive: boolean): Observable<Employee[]> {
     return this.http.get<Employee[]>(`${this.api}/${this.employee}/status/${isActive}`);
+  }
+
+  public getDepartmentEmployees(departmentId: number, isActive: boolean): Observable<Employee[]> {
+    const url = `${this.api}/department/${departmentId}/${this.employee}/${isActive}`;
+    return this.http.get<Employee[]>(url);
+  }
+
+  public getEmployeeJson(): Observable<Employee[]> {
+    return this.http.get<Employee[]>(`${this.api}/${this.employee}/json`);
+  }
+
+  public getEmployeeXml(): Observable<string> {
+    return this.http.get(`${this.api}/${this.employee}/xml`, { responseType: 'text' });
   }
   
 }

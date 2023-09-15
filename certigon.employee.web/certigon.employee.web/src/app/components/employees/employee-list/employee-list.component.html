@@ -1,37 +1,71 @@
 <div class="container">
-    
     <div class="center" style="overflow-x:auto;">
         <div class="header">
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                <label class="form-check-label" for="flexSwitchCheckDefault">Active Employee</label>
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" [(ngModel)]="showActiveEmployees" (click)="filterEmployees()" checked>
+                <label class="form-check-label" for="flexSwitchCheckChecked">Active Employee</label>
             </div>
-            <button class="btn btn-primary btn-lg active" role="button" id="addButton" (click)="addEmployee()" aria-pressed="true">Create new employee</button>
+            <div class="btn-group">
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-lg dropdown-toggle me-2" type="button" id="addButton" data-bs-toggle="dropdown" aria-expanded="false">
+                      Department
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="departmentDropdown">
+                      <li *ngFor="let department of departments">
+                        <a class="dropdown-item" href="#" (click)="selectDepartment(department)">
+                            {{ department === 'AllDepartments' ? 'All Departments' : getDepartmentString(department) }}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                <button class="btn btn-primary btn-lg active" role="button" id="addButton" (click)="addEmployee()" aria-pressed="true">Create new employee</button>
+            </div>
         </div>
-      <table class="table table" >
-          <thead>
-              <tr class="table-active">
-                  <th scope="col">Id</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Surname</th>
-                  <th scope="col">City</th>
-                  <th scope="col">Department</th>
-                  <th scope="col">IsActive</th>
-                  <th scope="col">Edit</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let employee of employees">
-                  <td>{{employee.id}}</td>
-                  <td>{{employee.name}}</td>
-                  <td>{{employee.surname}}</td>
-                  <td>{{employee.city}}</td>
-                  <td>{{employee.department !== undefined ? getDepartmentString(employee.department) : 'Unknown'}}</td>
-                  <td>{{employee.isActive}}</td>
-                  <td><button type="button" id="editButton" (click)="editEmployee(employee)" class="btn btn-primary me-1">Edit</button>
-                  <button type="button" (click)="deleteEmployee(employee)" class="btn btn-danger">Delete</button></td>
-              </tr>
-          </tbody>
-      </table>
-      </div> 
+        <table class="table table">
+            <thead>
+                <tr class="table-active">
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Department</th>
+                    <th scope="col">IsActive</th>
+                    <th scope="col">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let employee of employees">
+                    <td>{{employee.id}}</td>
+                    <td>{{employee.name}}</td>
+                    <td>{{employee.surname}}</td>
+                    <td>{{employee.city}}</td>
+                    <td>{{employee.department !== undefined ? getDepartmentString(employee.department) : 'Unknown'}}</td>
+                    <td>{{employee.isActive}}</td>
+                    <td>
+                        <button type="button" id="editButton" (click)="editEmployee(employee)" class="btn btn-primary me-1">Edit</button>
+                        <button type="button" (click)="deleteEmployee(employee)" class="btn btn-danger">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+    <button
+    class="btn btn-primary btn-lg active me-2"
+    role="button"
+    id="addButton"
+    (click)="openJsonDataInNewTab()"
+    aria-pressed="true"
+  >
+    Json Format Employee
+  </button>
+  <button
+    class="btn btn-primary btn-lg active"
+    role="button"
+    id="addButton"
+    (click)="openXmlDataInNewTab()"
+    aria-pressed="true"
+  >
+    Xml Format Employee
+  </button>
+</div>

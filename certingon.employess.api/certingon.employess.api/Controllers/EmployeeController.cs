@@ -2,6 +2,7 @@
 using certingon.employess.api.Model;
 using certingon.employess.api.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.Serialization;
 
 namespace certingon.employess.api.Controllers
 {
@@ -11,10 +12,26 @@ namespace certingon.employess.api.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _repository;
-
+        private readonly List<Employee> _employeeData;
         public EmployeeController(IEmployeeRepository repository)
         {
             _repository = repository;
+            _employeeData = LoadEmployeeDataFromJsonFile();
+            
+        }
+
+        [HttpGet("json")]
+        public IActionResult GetEmployeesJson()
+        {
+            var jsonData = _repository.GetEmployeesJsonString();
+            return Ok(jsonData);
+        }
+
+        [HttpGet("xml")]
+        public IActionResult GetEmployeesXml()
+        {
+            var xmlData = _repository.GetEmployeesXmlString();
+            return Content(xmlData, "application/xml");
         }
 
         [HttpGet]
@@ -96,5 +113,15 @@ namespace certingon.employess.api.Controllers
                 return NoContent();
             }
         }
+
+        private List<Employee> LoadEmployeeDataFromJsonFile()
+        {
+            using (StreamReader r = new StreamReader("employee.json"))
+            {
+                string json = r.ReadToEnd();
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Employee>>(json);
+            }
+        }
+
     }
 }

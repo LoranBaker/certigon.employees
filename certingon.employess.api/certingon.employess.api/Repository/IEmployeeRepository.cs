@@ -10,5 +10,7 @@ namespace certingon.employess.api.Services
         void AddEmployee(Employee employee);
         void UpdateEmployee(Employee updatedEmployee);
         void DeleteEmployee(int id);
+        string GetEmployeesJsonString();
+        string GetEmployeesXmlString();
     }
 }

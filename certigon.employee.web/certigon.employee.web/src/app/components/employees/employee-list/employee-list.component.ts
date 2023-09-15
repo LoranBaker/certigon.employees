@@ -15,7 +15,13 @@ import { DeleteEmployeeComponent } from '../delete-employee/delete-employee.comp
 export class EmployeeListComponent implements OnInit {
 
   employees: Employee[] = [];
-  constructor(private employeeService: EmployeeService, private modalService: NgbModal) { }
+  showActiveEmployees = false;
+  selectedDepartment: Department | 'AllDepartments' = 'AllDepartments';
+  departments: (Department | 'AllDepartments')[] = [...Object.values(Department).filter(value => typeof value === 'number') as Department[], 'AllDepartments'];
+
+
+  constructor(private employeeService: EmployeeService, private modalService: NgbModal) {
+  }
 
   getDepartmentString(department: Department): string {
     switch (department) {
@@ -31,48 +37,89 @@ export class EmployeeListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.employeeService
-    .getEmployee()
-    .subscribe((result:Employee[]) => (this.employees = result));
+    this.filterEmployees();
   }
 
-  addEmployee(){
+  addEmployee() {
     const ref = this.modalService.open(AddEmployeeComponent);
-    ref.componentInstance.employees = new Employee();
-    ref.result.then((ok)=>{
-      console.log("ok");
-      
-    },
-    (cancel)=>{
-      console.log("cancel");
+  
+    ref.componentInstance.employeeAdded.subscribe((addedEmployee: Employee) => {
+      if (addedEmployee) {
+        this.employees.push(addedEmployee);
+      }
     });
-    
   }
 
-  editEmployee(employee: Employee){
-
+  editEmployee(employee: Employee) {
     const ref = this.modalService.open(EditEmployeeComponent);
     ref.componentInstance.employee = employee;
-
-    ref.result.then((ok)=>{
-      console.log("ok");
-    },
-    (cancel)=>{
-      console.log("cancel");
+  
+    ref.componentInstance.employeeUpdated.subscribe((updatedEmployee: Employee) => {
+      if (updatedEmployee) {
+        const index = this.employees.findIndex((e) => e.id === updatedEmployee.id);
+        if (index !== -1) {
+          this.employees[index] = updatedEmployee;
+        }
+      }
+    });
+  }
+  
+  
+  deleteEmployee(employee: Employee) {
+    const ref = this.modalService.open(DeleteEmployeeComponent);
+    ref.componentInstance.employee = employee;
+  
+    ref.componentInstance.employeeUpdated.subscribe((deletedEmployeeId: number) => {
+      if (deletedEmployeeId) {
+        this.employees = this.employees.filter((e) => e.id !== deletedEmployeeId);
+      }
+    });
+  }
+  
+  filterEmployees() {
+    this.employeeService
+      .getEmployeesByStatus(!this.showActiveEmployees)
+      .subscribe((result: Employee[]) => (this.employees = result));
+  }
+  
+  selectDepartment(department: Department | 'AllDepartments') {
+    this.selectedDepartment = department;
+  
+    if (department === 'AllDepartments') {
+      this.employeeService
+        .getEmployeesByStatus(!this.showActiveEmployees)
+        .subscribe((result: Employee[]) => (this.employees = result));
+    } else {
+      this.employeeService
+        .getDepartmentEmployees(department as Department, this.showActiveEmployees)
+        .subscribe((result: Employee[]) => (this.employees = result));
+    }
+  }
+  
+  openJsonDataInNewTab() {
+    this.employeeService.getEmployee().subscribe((data) => {
+      const jsonData = JSON.stringify(data, null, 2);
+      this.openNewTabWithData(jsonData, 'application/json');
     });
   }
 
-  deleteEmployee(employee: Employee){
-
-    const ref = this.modalService.open(DeleteEmployeeComponent);
-    ref.componentInstance.employee = employee;
-
-    ref.result.then((ok)=>{
-      console.log("ok");
-    },
-    (cancel)=>{
-      console.log("cancel");
+  openXmlDataInNewTab() {
+    this.employeeService.getEmployeeXml().subscribe((xmlData) => {
+      this.openNewTabWithData(xmlData, 'application/xml');
     });
+  }
+
+  private openNewTabWithData(data: string, contentType: string) {
+    const blob = new Blob([data], { type: contentType });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `employee_data.${contentType.split('/')[1]}`;
+    a.target = '_blank';
+    a.click();
+
+    window.URL.revokeObjectURL(url);
   }
 
 }

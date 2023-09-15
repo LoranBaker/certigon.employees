@@ -1,5 +1,6 @@
 ﻿using certingon.employess.api.Model;
 using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace certingon.employess.api.Services
 {
@@ -60,6 +61,18 @@ namespace certingon.employess.api.Services
             return employees.Where(e => e.IsActive == isActive).ToList();
         }
 
+        public string GetEmployeesJsonString()
+        {
+            return JsonConvert.SerializeObject(employees);
+        }
+
+        public string GetEmployeesXmlString()
+        {
+            var serializer = new XmlSerializer(typeof(List<Employee>));
+            var xmlString = new StringWriter();
+            serializer.Serialize(xmlString, employees);
+            return xmlString.ToString();
+        }
 
         private List<Employee> LoadEmployeesFromFile()
         {

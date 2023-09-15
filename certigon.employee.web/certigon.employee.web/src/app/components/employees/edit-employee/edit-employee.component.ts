@@ -3,6 +3,9 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Department, Employee } from 'src/app/models/employee.model';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmployeeService } from 'src/app/services/employee.service';
+import { ChangeDetectorRef } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-edit-employee',
@@ -18,11 +21,12 @@ export class EditEmployeeComponent implements OnInit {
     .map(value => value as string); 
 
   editEmployee: FormGroup;
+  
 
   constructor(
     public modal: NgbActiveModal,
     private employeeService: EmployeeService,
-    private fb: FormBuilder
+    private fb: FormBuilder, private toastr:ToastrService
   ) {
     this.editEmployee = this.fb.group({
       name: new FormControl('', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(30)])),
@@ -34,14 +38,13 @@ export class EditEmployeeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Set the form values based on the input employee
     if (this.employee) {
       this.editEmployee.patchValue({
         name: this.employee.name,
         surname: this.employee.surname,
         city: this.employee.city,
-        department: Department[this.employee.department] || '', // Convert to string if it's an enum
-        isActive: this.employee.isActive || false // Use the actual isActive value or set to false if undefined
+        department: Department[this.employee.department] || '', 
+        isActive: this.employee.isActive || false
       });
 
     }
@@ -51,10 +54,8 @@ export class EditEmployeeComponent implements OnInit {
     if (this.editEmployee.valid) {
       const updatedEmployee = this.editEmployee.value;
   
-      // Convert the selected department string to the corresponding enum value
       updatedEmployee.department = this.getDepartmentValue(updatedEmployee.department);
   
-      // Include the id property if 'this.employee' is defined
       if (this.employee) {
         updatedEmployee.id = this.employee.id;
       }
@@ -62,6 +63,7 @@ export class EditEmployeeComponent implements OnInit {
       this.employeeService.updateEmployee(updatedEmployee).subscribe((updatedEmployee: Employee[]) =>
         this.employeeUpdated.emit(updatedEmployee)
       );
+      this.toastr.success("You have successfully updated employee!");
       this.modal.close();
     }
   }

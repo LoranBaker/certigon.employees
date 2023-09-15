@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbActiveModal, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule,ReactiveFormsModule  } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -26,7 +27,13 @@ import { DeleteEmployeeComponent } from './components/employees/delete-employee/
     HttpClientModule,
     NgbModule,
     FormsModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      progressBar:true,
+      progressAnimation:'increasing',
+      preventDuplicates:true,
+    }), 
   ],
   providers: [
     NgbActiveModal,
